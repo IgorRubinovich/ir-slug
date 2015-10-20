@@ -32,7 +32,7 @@ ir-slug is using a native input placed in its lightDom and so if used inside a n
 | msgSlugIsAvailable | String | "slug is available" | message to display when slug is available |
 | msgSlugIsNotAvailable | String | "slug is not available" | message to display when slug is not available |
 | transliterationTable | Object | Russian alphabet transliteration table | to transliterate a different language provide this attribute with a different object map |
-| slugCheckDelay | Number | .4 | seconds to wait after last change before checking availability |
+| slugCheckDelay | Number | 0.4 | seconds to wait after last change before checking availability |
 
 ## Key todos
 - Better docs
