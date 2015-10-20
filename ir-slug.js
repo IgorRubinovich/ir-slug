@@ -6,7 +6,9 @@
 
 			this.transliterator = translitEngine(transliterationTable);
 
-			el = document.querySelector(this.source);
+			if(this.source)
+				el = document.querySelector(this.source);
+
 			if(!el)
 			{
 				els = document.querySelectorAll('[name="' + this.name + '"]');
