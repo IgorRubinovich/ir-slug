@@ -40,7 +40,7 @@ ir-slug is using a native input placed in its lightDom and so if used inside a n
 - Tests
 
 ## Contributors
-- Sandor Tokodi
+- [Sandor Tokodi](https://github.com/Toki-dev/)
 
 ## Contribution
 Issues and pull requests are most welcome. Fork it [here](https://github.com/IgorRubinovich/ir-slug).
