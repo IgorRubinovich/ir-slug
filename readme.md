@@ -12,12 +12,9 @@ Standalone (no source element):
     
     <ir-slug name="el2" slug-check-url="http://localhost:5000/[slug]"></ir-slug>
 
-	
-
-
 <a name="native-form-integration"></a>
 ## Native form integration
-ir-slug is using a native input placed in its lightDom, so in a form it acts just like a native input.
+ir-slug is using a native input placed in its lightDom and so if used inside a native form will act just like a native input element.
 
 ## Settings
 
