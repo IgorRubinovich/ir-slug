@@ -20,15 +20,30 @@ This code may only be used under the MIT license found at http://opensource.org/
 
 
 <a name="native-form-integration"></a>
-#### Native form integration
+## Native form integration
 ir-slug is using a native input placed in its lightDom, so in a form it acts just like a native input.
 
-## Events
-- change is fired when item was added or removed, after the more specific events above.
-- change is fired when item was added or removed, after the more specific events above.
+## Settings
+
+| Property | Type | Default | Description |
+| --------- | ---- | ------- | ----------- |
+| name | String | undefined | Specifies input name that will be submitted as part of the form. if not provided will attempt to use source element's name. Otherwise access .value manually.
+| slugCheckUrl | String | undefined | URL to request to check for slug availability. Use [slug] as a placeholder for the current value, e.g.: http://example.com/[slug]/ |
+| source | String | "" | id of source element to reflect. if not provided will try to match by name |
+| valueAttr | String | "value" | attribute on source element to process |
+| onEvent | String | "keyup" | event on source element that triggers updates |
+| value | String | "" | current slug value | 
+| whitespaceChar | String | "-" | character to replace whitespace with |
+| keepWhitespace | Boolean | false | if true will not condense multiple whitespaces into one |
+| autoSuggest | Boolean | false | automatically replace the value with next available |
+| msgSlugIsAvailable | String | "slug is available" | message to display when slug is available |
+| msgSlugIsNotAvailable | String | "slug is not available" | message to display when slug is not available |
+| transliterationTable | Object | Russian alphabet transliteration table | to transliterate a different language provide this attribute with a different object map |
+| slugCheckDelay | Number | .4 | seconds to wait after last change before checking availability |
 
 ## Key todos
 - Better docs
+- Demo
 - Tests
 
 ## Contributors
