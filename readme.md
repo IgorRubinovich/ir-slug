@@ -3,12 +3,12 @@
 ### Slug transliteration element with optional remote availability check - works with Polymer 1.0.
 
 ## Usage
-	Will bind to <input>, check url availability at http://localhost:5000/[slug]:
-		<input name="el1" type="text">
-		<ir-slug name="el1" slug-check-url="http://localhost:5000/[slug]"></ir-slug>
+Will bind to <input>, check url availability at http://localhost:5000/[slug]:
+	<input name="el1" type="text">
+	<ir-slug name="el1" slug-check-url="http://localhost:5000/[slug]"></ir-slug>
 
-	Standalone:
-	<ir-slug name="el2" slug-check-url="http://localhost:5000/[slug]"></ir-slug>
+Standalone (no source element):
+    <ir-slug name="el2" slug-check-url="http://localhost:5000/[slug]"></ir-slug>
 
 	
 
