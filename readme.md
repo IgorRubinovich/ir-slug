@@ -1,6 +1,6 @@
 # ir-slug
 
-# Chceck slug and suggest a new one Polymer 1.0
+# Polymer 1.0 slug transliteration element with optional remote availability check.
 
 
 ## Usage

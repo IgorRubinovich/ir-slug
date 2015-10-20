@@ -66,7 +66,7 @@
 				this._slugCheckWaitStart = (new Date()).getTime();
 			
 			if(this._slugCheckTimeout)
-				clearTimeout(this._slugCheckTimeout), console.log("cleared timeout before setting new one");
+				clearTimeout(this._slugCheckTimeout);
 			
 			this._slugCheckTimeout =
 				setTimeout(function() {
@@ -76,8 +76,6 @@
 					that.slugCheckTimeout
 					clearTimeout(that._slugCheckTimeout);
 					that._slugCheckTimeout = null;
-					
-					console.log("cleared timeout after response")
 				}, timeout);
 		},
 		
