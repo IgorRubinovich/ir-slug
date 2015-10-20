@@ -1,0 +1,68 @@
+<!--
+@license
+Copyright (c) 2015 Igor Rubinovich <igor.rubinovich@gmail.com>. All rights reserved.
+This code may only be used under the MIT license found at http://opensource.org/licenses/MIT
+
+# ir-slug
+
+# Chceck slug and suggest a new one Polymer 1.0
+
+
+## Usage
+	Will bind to <input>, check url availability at http://localhost:5000/[slug]:
+		<input name="el1" type="text">
+		<ir-slug name="el1" slug-check-url="http://localhost:5000/[slug]"></ir-slug>
+
+	Standalone:
+	<ir-slug name="el2" slug-check-url="http://localhost:5000/[slug]"></ir-slug>
+
+	
+
+
+<a name="native-form-integration"></a>
+#### Native form integration
+ir-slug is using a native input placed in its lightDom, so in a form it acts just like a native input.
+
+## Events
+- change is fired when item was added or removed, after the more specific events above.
+- change is fired when item was added or removed, after the more specific events above.
+
+## Key todos
+- Better docs
+- Tests
+
+## Contributors
+- Sandor Tokodi
+
+## Contribution
+Issues and pull requests are most welcome. Fork it [here](https://github.com/IgorRubinovich/ir-select).
+-->
+
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<dom-module id="ir-slug">
+	<template>
+		<content>
+		</content>
+		<template is="dom-if" if="{{checkedSlug}}">
+			<span hidden$="{{!isSlugAvailable}}">{{ msgSlugIsAvailable }}</span>
+			<span hidden$="{{isSlugAvailable}}">{{ msgSlugIsNotAvailable }}</span>
+		</template>
+
+		<iron-ajax
+			id="slugChecker"
+			url=""
+			method="HEAD"
+			on-response="_receivedSlugCheckerResponse"
+			on-error="_receivedSlugCheckerResponse"
+			handle-as="json"
+			debounce-duration="300"
+			last-response="{{ _slugCheckerResponse }}"
+			last-error="{{ _slugCheckerError }}"
+			verbose=true
+			>
+		</iron-ajax>
+	</template>
+</dom-module>
+
+<script src="ir-slug.js"></script>
+

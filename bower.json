@@ -1,0 +1,35 @@
+{
+  "name": "ir-slug",
+  "main": "ir-slug.html",
+  "version": "0.5.0",
+  "authors": [
+    "Igor Rubinovich <igor.rubinovih@gmail.com>"
+  ],
+  "description": "Polymer 1.0 element to suggest slug with optional remote availability check.",
+  "keywords": [
+    "multiselect",
+    "web-component",
+    "web-components",
+    "polymer",
+    "form",
+    "input",
+    "behavior",
+    "native"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-ajax": "PolymerElements/iron-ajax#~1.0.6"
+  },
+  "devDependencies": {
+    "webcomponentsjs": "~0.7.7",
+    "iron-component-page": "PolymerElements/iron-component-page#~1.0.5",
+    "web-component-tester": "*"
+  }
+}
