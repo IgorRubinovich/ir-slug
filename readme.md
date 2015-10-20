@@ -1,7 +1,6 @@
 # ir-slug
 
-# Polymer 1.0 slug transliteration element with optional remote availability check.
-
+### Slug transliteration element with optional remote availability check - works with Polymer 1.0.
 
 ## Usage
 	Will bind to <input>, check url availability at http://localhost:5000/[slug]:
