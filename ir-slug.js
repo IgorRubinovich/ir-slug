@@ -34,7 +34,7 @@
 			this.nativeInputElement.setAttribute('name', this.name || this.sourceElement.name);
 			this.nativeInputElement.value = that.get(this.valueAttr, this.sourceElement);
 			this.sourceElement.addEventListener(this.onEvent, function(e) {
-				that.nativeInputElement.value = that.get(that.valueAttr, that.sourceElement);
+				that.nativeInputElement.value = that.transliterator(that.get(that.valueAttr, that.sourceElement));
 				that.slugChanged();
 			});
 		},
@@ -46,7 +46,7 @@
 						res.replace(new RegExp("[" + this.whitespaceChar + "\\s]+", "g"), this.whitespaceChar);
 		
 			if((this.value != res) || (res != spres))
-				this.value = this.nativeInputElement.value = spres;
+				this.set("value", this.nativeInputElement.value = spres);
 
 			this.retryCount = 0;
 		},
@@ -54,7 +54,7 @@
 		checkUrlAvailability : function(immediate) {
 			var that = this;
 			
-			if(!this.slugCheckUrl)
+			if(!this.slugCheckUrl && !this.value)
 				return;
 
 			var timeout = this.slugCheckDelay * 1000;
@@ -69,13 +69,12 @@
 			
 			if(this._slugCheckTimeout)
 				clearTimeout(this._slugCheckTimeout);
-			
+
 			this._slugCheckTimeout =
 				setTimeout(function() {
 					that.$.slugChecker.url = that.slugCheckUrl.replace(/\[slug\]/, encodeURIComponent(that.value));
 					that.$.slugChecker.generateRequest();
-					
-					that.slugCheckTimeout
+
 					clearTimeout(that._slugCheckTimeout);
 					that._slugCheckTimeout = null;
 				}, timeout);
@@ -83,7 +82,7 @@
 		
 		_receivedSlugCheckerResponse : function(e) {
 			var v;
-			
+
 			this.set("checkedSlug", true);
 			this.set("isSlugAvailable", !e.detail.status && (e.detail.request.status == 404));
 			
