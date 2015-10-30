@@ -27,11 +27,11 @@
 			this.nativeInputElement.addEventListener("change", this.slugChanged.bind(this));
 			this.nativeInputElement.addEventListener("keyup", this.slugChanged.bind(this));
 			this.nativeInputElement.value = this.value;
+			this.nativeInputElement.setAttribute('name', this.name || this.sourceElement.name);
 			
 			if(!this.sourceElement)
 				return;
 
-			this.nativeInputElement.setAttribute('name', this.name || this.sourceElement.name);
 			this.nativeInputElement.value = that.get(this.valueAttr, this.sourceElement);
 			this.sourceElement.addEventListener(this.onEvent, function(e) {
 				that.nativeInputElement.value = that.transliterator(that.get(that.valueAttr, that.sourceElement));
@@ -95,13 +95,18 @@
 				}
 				else
 					this.retryCount++;
-			
-				v = this.retryBase + this.whitespaceChar + this.retryCount;
-				
-				if(v != this.value)
-					this.value = this.nativeInputElement.value = v;
-				
-				this.checkUrlAvailability(true);
+
+				if(this.attributes.value.value != this.value)
+				{
+
+					v = this.retryBase + this.whitespaceChar + this.retryCount;
+					if(v != this.value)
+						this.value = this.nativeInputElement.value = v;
+
+					this.checkUrlAvailability(true);
+				}
+				else
+					this.value = this.nativeInputElement.value = this.retryBase;
 			}
 			Polymer.dom.flush();
 		},
