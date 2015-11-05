@@ -85,6 +85,7 @@
 
 			this.set("checkedSlug", true);
 			this.set("isSlugAvailable", !e.detail.status && (e.detail.request.status == 404));
+			this.set("isUrlOld", false);
 			
 			if(!this.isSlugAvailable && this.autoSuggest)
 			{
@@ -106,7 +107,10 @@
 					this.checkUrlAvailability(true);
 				}
 				else
+				{
 					this.value = this.nativeInputElement.value = this.retryBase;
+					this.set("isUrlOld", true);
+				}
 			}
 			Polymer.dom.flush();
 		},

@@ -57,11 +57,20 @@ Issues and pull requests are most welcome. Fork it [here](https://github.com/Igo
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 <dom-module id="ir-slug">
 	<template>
+	<style>
+	#checkedField{	
+		padding-top: 10px;
+		position: relative;
+		float: right;
+	}	
+	</style>
 		<content>
 		</content>
 		<template is="dom-if" if="{{checkedSlug}}">
+		<div id="checkedField" hidden$="{{isUrlOld}}">
 			<span hidden$="{{!isSlugAvailable}}">{{ msgSlugIsAvailable }}</span>
 			<span hidden$="{{isSlugAvailable}}">{{ msgSlugIsNotAvailable }}</span>
+		</div>	
 		</template>
 
 		<iron-ajax
