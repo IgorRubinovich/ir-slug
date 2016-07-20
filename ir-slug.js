@@ -1,8 +1,10 @@
 (function() {
 	Polymer({
 		is : "ir-slug",
+		
 		attached : function() {
 			var el, els, that = this, m, mk, mv, i;
+			this.isAttached = true;
 
 			this.transliterator = translitEngine(transliterationTable);
 
@@ -24,9 +26,9 @@
 
 			Polymer.dom(this).appendChild(this.nativeInputElement);
 
+			this.nativeInputElement.value = this.value;
 			this.nativeInputElement.addEventListener("change", this.slugChanged.bind(this));
 			this.nativeInputElement.addEventListener("keyup", this.slugChanged.bind(this));
-			this.nativeInputElement.value = this.value;
 			this.nativeInputElement.setAttribute('name', this.name || this.sourceElement.name);
 			
 			if(!this.sourceElement)
@@ -37,6 +39,11 @@
 				that.nativeInputElement.value = that.transliterator(that.get(that.valueAttr, that.sourceElement));
 				that.slugChanged();
 			});
+		},
+		
+		detached : function() {
+			console.count("is-slug detached");
+			this.isAttached = false;
 		},
 		
 		slugChanged : function() {
@@ -82,7 +89,7 @@
 		
 		_receivedSlugCheckerResponse : function(e) {
 			var v;
-
+			
 			this.set("checkedSlug", true);
 			this.set("isSlugAvailable", !e.detail.status && (e.detail.request.status == 404));
 			this.set("isUrlOld", false);
@@ -150,7 +157,10 @@
 			transliterationTable : { type : Object, value : transliterationTable, observer : "_transliterationTableChanged" },
 
 			/** seconds to wait after last change before checking availability */
-			slugCheckDelay : { type : Number, value : .4 }
+			slugCheckDelay : { type : Number, value : .4 },
+			
+			/** don't access native input element if detached*/
+			isAttached : {type : Boolean, value : true}
 		}
 	});
 	
