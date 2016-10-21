@@ -2,6 +2,10 @@
 	Polymer({
 		is : "ir-slug",
 		
+		ready : function() {
+			this._originalValue = this.getAttribute('value');
+		},
+		
 		attached : function() {
 			var el, els, that = this, m, mk, mv, i;
 			this.isAttached = true;
@@ -65,7 +69,10 @@
 		checkUrlAvailability : function(immediate) {
 			var that = this;
 			
-			if(!this.slugCheckUrl && !this.value)
+			if(!this.slugCheckUrl || !this.value)
+				return;
+ 			
+			if(this.value == this._originalValue)
 				return;
 
 			var timeout = this.slugCheckDelay * 1000;
