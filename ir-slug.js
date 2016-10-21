@@ -24,12 +24,16 @@
 			this.sourceElement = el;
 			this.nativeInputElement = document.createElement('input');
 
+			
 			Polymer.dom(this).appendChild(this.nativeInputElement);
 
 			this.nativeInputElement.value = this.value;
 			this.nativeInputElement.addEventListener("change", this.slugChanged.bind(this));
 			this.nativeInputElement.addEventListener("keyup", this.slugChanged.bind(this));
 			this.nativeInputElement.setAttribute('name', this.name || this.sourceElement.name);
+			
+			if(this.size)
+				this.nativeInputElement.setAttribute('size', this.size);
 			
 			if(!this.sourceElement)
 				return;
@@ -125,6 +129,10 @@
 		_transliterationTableChanged : function() {
 			transliterationTable = this.transliterationTable;
 		},
+		
+		_or : function() {
+			return Array.prototype.slice.call(arguments).reduce(function(p, a) { return p || a }, false);			
+		},
 
 		/** value of the reflected element */
 		properties : {
@@ -152,6 +160,12 @@
 
 			/** message to display when slug is not available */
 			msgSlugIsNotAvailable : { type : String, value : "slug is not available", notify : true },
+
+			/** message to display when slug is not available */
+			msgIsLoading : { type : String, value : "checking", notify : true },
+			
+			/** is now checking */
+			isLoading : { type : Boolean, value : false, notify : true },
 			
 			/** custom transliteration table */
 			transliterationTable : { type : Object, value : transliterationTable, observer : "_transliterationTableChanged" },
@@ -160,7 +174,9 @@
 			slugCheckDelay : { type : Number, value : .4 },
 			
 			/** don't access native input element if detached*/
-			isAttached : {type : Boolean, value : true}
+			isAttached : {type : Boolean, value : true},
+			/** input field size*/
+			size : {type : Number, value : true}
 		}
 	});
 	

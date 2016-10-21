@@ -68,19 +68,21 @@ Issues and pull requests are most welcome. Fork it [here](https://github.com/Igo
 		</content>
 		<template is="dom-if" if="{{checkedSlug}}">
 		<div id="checkedField" hidden$="{{isUrlOld}}">
-			<span hidden$="{{!isSlugAvailable}}">{{ msgSlugIsAvailable }}</span>
-			<span hidden$="{{isSlugAvailable}}">{{ msgSlugIsNotAvailable }}</span>
+			<span hidden$="{{!isLoading}}">{{ msgIsLoading }}</span>
+			<span hidden$="{{_or(isLoading,isSlugAvailable)}}">{{ msgSlugIsNotAvailable }}</span>
+			<span hidden$="{{_or(isLoading,!isSlugAvailable)}}">{{ msgSlugIsAvailable }}</span>
 		</div>	
 		</template>
 
 		<iron-ajax
 			id="slugChecker"
 			url=""
+			loading="{{isLoading}}"
 			method="HEAD"
 			on-response="_receivedSlugCheckerResponse"
 			on-error="_receivedSlugCheckerResponse"
 			handle-as="json"
-			debounce-duration="300"
+			debounce-duration="600"
 			last-response="{{ _slugCheckerResponse }}"
 			last-error="{{ _slugCheckerError }}"
 			>
