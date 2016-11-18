@@ -6,6 +6,12 @@
 			this._originalValue = this.getAttribute('value');
 		},
 		
+		observers : ["valueChanged(value)"],
+		
+		valueChanged : function() {
+			this.fire('change', this.value);
+		},
+		
 		attached : function() {
 			var el, els, that = this, m, mk, mv, i;
 			this.isAttached = true;
@@ -27,7 +33,6 @@
 
 			this.sourceElement = el;
 			this.nativeInputElement = document.createElement('input');
-
 			
 			Polymer.dom(this).appendChild(this.nativeInputElement);
 
@@ -35,6 +40,7 @@
 			this.nativeInputElement.addEventListener("change", this.slugChanged.bind(this));
 			this.nativeInputElement.addEventListener("keyup", this.slugChanged.bind(this));
 			this.nativeInputElement.setAttribute('name', this.name || this.sourceElement.name);
+			
 			
 			if(this.size)
 				this.nativeInputElement.setAttribute('size', this.size);
@@ -61,8 +67,9 @@
 						res.replace(new RegExp("[" + this.whitespaceChar + "\\s]+", "g"), this.whitespaceChar);
 		
 			if((this.value != res) || (res != spres))
+			{
 				this.set("value", this.nativeInputElement.value = spres);
-
+			}
 			this.retryCount = 0;
 		},
 			

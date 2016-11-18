@@ -67,11 +67,11 @@ Issues and pull requests are most welcome. Fork it [here](https://github.com/Igo
 		<content>
 		</content>
 		<template is="dom-if" if="{{checkedSlug}}">
-		<div id="checkedField" hidden$="{{isUrlOld}}">
-			<span hidden$="{{!isLoading}}">{{ msgIsLoading }}</span>
-			<span hidden$="{{_or(isLoading,isSlugAvailable)}}">{{ msgSlugIsNotAvailable }}</span>
-			<span hidden$="{{_or(isLoading,!isSlugAvailable)}}">{{ msgSlugIsAvailable }}</span>
-		</div>	
+			<div id="checkedField" hidden$="{{isUrlOld}}">
+				<span hidden$="{{!isLoading}}">{{ msgIsLoading }}</span>
+				<span hidden$="{{_or(isLoading,isSlugAvailable)}}">{{ msgSlugIsNotAvailable }}</span>
+				<span hidden$="{{_or(isLoading,!isSlugAvailable)}}">{{ msgSlugIsAvailable }}</span>
+			</div>	
 		</template>
 
 		<iron-ajax
