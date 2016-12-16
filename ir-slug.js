@@ -50,7 +50,10 @@
 
 			this.nativeInputElement.value = that.get(this.valueAttr, this.sourceElement);
 			this.sourceElement.addEventListener(this.onEvent, function(e) {
-				that.nativeInputElement.value = that.transliterator(that.get(that.valueAttr, that.sourceElement));
+				that.nativeInputElement.value = that.transliterator(that.get(that.valueAttr, that.sourceElement)
+													.replace(/[^a-zA-Z0-9_-]/g, "-")
+													.replace(/[\s-]+/g, "-")
+													.replace(/-$/, ""));
 				that.slugChanged();
 			});
 		},
@@ -107,37 +110,40 @@
 		
 		_receivedSlugCheckerResponse : function(e) {
 			var v;
+
+			this.debounce(function() {
+				this.set("checkedSlug", true);
+				this.set("isSlugAvailable", !e.detail.status && (e.detail.request.status == 404));
+				this.set("isUrlOld", false);
+				
+				if(!this.isSlugAvailable && this.autoSuggest)
+				{
+					if(!this.retryCount)
+					{
+						this.retryBase = this.value;
+						this.retryCount = 1;
+					}
+					else
+						this.retryCount++;
+
+					if(this.attributes.value.value != this.value)
+					{
+
+						v = this.retryBase + this.whitespaceChar + this.retryCount;
+						if(v != this.value)
+							this.value = this.nativeInputElement.value = v;
+
+						this.checkUrlAvailability(true);
+					}
+					else
+					{
+						this.value = this.nativeInputElement.value = this.retryBase;
+						this.set("isUrlOld", true);
+					}
+				}
+				Polymer.dom.flush();
+			}, 300);
 			
-			this.set("checkedSlug", true);
-			this.set("isSlugAvailable", !e.detail.status && (e.detail.request.status == 404));
-			this.set("isUrlOld", false);
-			
-			if(!this.isSlugAvailable && this.autoSuggest)
-			{
-				if(!this.retryCount)
-				{
-					this.retryBase = this.value;
-					this.retryCount = 1;
-				}
-				else
-					this.retryCount++;
-
-				if(this.attributes.value.value != this.value)
-				{
-
-					v = this.retryBase + this.whitespaceChar + this.retryCount;
-					if(v != this.value)
-						this.value = this.nativeInputElement.value = v;
-
-					this.checkUrlAvailability(true);
-				}
-				else
-				{
-					this.value = this.nativeInputElement.value = this.retryBase;
-					this.set("isUrlOld", true);
-				}
-			}
-			Polymer.dom.flush();
 		},
 		
 		_transliterationTableChanged : function() {
