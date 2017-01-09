@@ -18,12 +18,14 @@
 
 			this.transliterator = translitEngine(transliterationTable);
 
+			p = Polymer.dom(Polymer.dom(Polymer.dom(this).parentNode).getOwnerRoot()); // look only within the scope of the shadow dom document
+			
 			if(this.source)
-				el = document.querySelector(this.source);
+				el = p.querySelector(this.source);
 
 			if(!el)
 			{
-				els = document.querySelectorAll('[name="' + this.name + '"]');
+				els = p.querySelectorAll('[name="' + this.name + '"]');
 
 				el = els[0];
 				i = 1;
@@ -50,10 +52,10 @@
 
 			this.nativeInputElement.value = that.get(this.valueAttr, this.sourceElement);
 			this.sourceElement.addEventListener(this.onEvent, function(e) {
-				that.nativeInputElement.value = that.transliterator(that.get(that.valueAttr, that.sourceElement)
+				that.nativeInputElement.value = that.transliterator(that.get(that.valueAttr, that.sourceElement))
 													.replace(/[^a-zA-Z0-9_-]/g, "-")
 													.replace(/[\s-]+/g, "-")
-													.replace(/-$/, ""));
+													.replace(/-$/, "");
 				that.slugChanged();
 			});
 		},
