@@ -13,7 +13,7 @@
 		},
 		
 		attached : function() {
-			var el, els, that = this, m, mk, mv, i;
+			var el, els, m, mk, mv, i;
 			this.isAttached = true;
 
 			this.transliterator = translitEngine(transliterationTable);
@@ -50,15 +50,17 @@
 			if(!this.sourceElement)
 				return;
 
-			this.nativeInputElement.value = that.get(this.valueAttr, this.sourceElement);
+			this.nativeInputElement.value = this.get(this.valueAttr, this.sourceElement);
 			this.sourceElement.addEventListener(this.onEvent, function(e) {
-				that.nativeInputElement.value = that.transliterator(that.get(that.valueAttr, that.sourceElement))
-													.replace(/[^a-zA-Z0-9_-]/g, "-")
-													.replace(/[\s-]+/g, "-")
-													.replace(/-$/, "")
-													.toLowerCase(); // an option to disable this could make sense
-				that.slugChanged();
-			});
+				this.nativeInputElement.value = 
+					this.transliterator(this.get(this.valueAttr, this.sourceElement))
+						.replace(/[^a-zA-Z0-9_-]/g, "-")
+						.replace(/[\s-]+/g, "-")
+						.replace(/-$/, "")
+						.toLowerCase(); // an option to disable this could make sense
+
+				this.slugChanged();
+			}.bind(this));
 		},
 		
 		detached : function() {
@@ -153,8 +155,12 @@
 			transliterationTable = this.transliterationTable;
 		},
 		
-		_or : function() {
-			return Array.prototype.slice.call(arguments).reduce(function(p, a) { return p || a }, false);			
+		_isNotAvailable : function() {
+			return this.isLoading || !this.isSlugAvailable;
+		},
+		
+		_isAvailable : function() {
+			return this.isLoading || this.isSlugAvailable;
 		},
 
 		/** value of the reflected element */
