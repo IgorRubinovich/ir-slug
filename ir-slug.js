@@ -55,7 +55,8 @@
 				that.nativeInputElement.value = that.transliterator(that.get(that.valueAttr, that.sourceElement))
 													.replace(/[^a-zA-Z0-9_-]/g, "-")
 													.replace(/[\s-]+/g, "-")
-													.replace(/-$/, "");
+													.replace(/-$/, "")
+													.toLowerCase(); // an option to disable this could make sense
 				that.slugChanged();
 			});
 		},
@@ -113,7 +114,7 @@
 		_receivedSlugCheckerResponse : function(e) {
 			var v;
 
-			this.debounce(function() {
+			this.debounce('debounce-responce', function() {
 				this.set("checkedSlug", true);
 				this.set("isSlugAvailable", !e.detail.status && (e.detail.request.status == 404));
 				this.set("isUrlOld", false);
@@ -309,7 +310,7 @@
 		};
 
 
-		// Fetch and sort the keys in the translitteration table object, to
+		// Fetch and sort the keys in the transliteration table object, to
 		// ensure the longest keys in the table is first in the array. Then
 		// it will find the position of the first one-letter index and split
 		// the keys into single letter indexes and longer 'specialCases.'
@@ -329,7 +330,7 @@
 
 
 		// Compile a regular expression using the keys found in the given
-		// translitteration object.
+		// transliteration object.
 		//
 		// specialCases are joined together with a pipe; `|`
 		// singleLetters joined together and wrapped in square brackets so
@@ -346,7 +347,7 @@
 
 
 		/**
-		 * Search for occurrences of entries in the translitteration table
+		 * Search for occurrences of entries in the transliteration table
 		 * and replace these with their corresponding values.
 		 *
 		 * @param [String] subject to transliterate.
