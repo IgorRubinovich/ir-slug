@@ -3,7 +3,7 @@
 		is : "ir-slug",
 		
 		ready : function() {
-			this._originalValue = this.getAttribute('value');
+			this.originalValue = this.getAttribute('value');
 		},
 		
 		observers : ["valueChanged(value)"],
@@ -52,6 +52,9 @@
 
 			this.nativeInputElement.value = this.get(this.valueAttr, this.sourceElement);
 			this.sourceElement.addEventListener(this.onEvent, function(e) {
+				if(this.disableSourceListener)
+					return;
+
 				this.nativeInputElement.value = 
 					this.transliterator(this.get(this.valueAttr, this.sourceElement))
 						.replace(/[^a-zA-Z0-9_-]/g, "-")
@@ -87,7 +90,9 @@
 			if(!this.slugCheckUrl || !this.value)
 				return;
  			
-			if(this.value == this._originalValue)
+			this._updateNativeInputValue(); // in case of return on the next line
+			
+			if(this.value == this.originalValue)
 				return;
 
 			var timeout = this.slugCheckDelay * 1000;
@@ -103,8 +108,9 @@
 			if(this._slugCheckTimeout)
 				clearTimeout(this._slugCheckTimeout);
 
-			this._slugCheckTimeout =
-				setTimeout(function() {
+			this.cancelDebouncer("slug-check");
+			this.debounce("slug-check",
+				function() {
 					that.$.slugChecker.url = that.slugCheckUrl.replace(/\[slug\]/, encodeURIComponent(that.value));
 					that.$.slugChecker.generateRequest();
 
@@ -131,7 +137,7 @@
 					else
 						this.retryCount++;
 
-					if(this.attributes.value.value != this.value)
+					if(this.value && this.getAttribute("value") != this.value)
 					{
 
 						v = this.retryBase + this.whitespaceChar + this.retryCount;
@@ -142,7 +148,7 @@
 					}
 					else
 					{
-						this.value = this.nativeInputElement.value = this.retryBase;
+						this.set("value", this.nativeInputElement.value = this.retryBase);
 						this.set("isUrlOld", true);
 					}
 				}
@@ -162,6 +168,16 @@
 		_isAvailable : function() {
 			return this.isLoading || this.isSlugAvailable;
 		},
+		
+		_setValueToOriginal : function() {
+			this.set("value", this.originalValue);
+			this._updateNativeInputValue();
+		},
+		
+		_updateNativeInputValue : function() {
+			if(this.nativeInputElement)
+				 this.nativeInputElement.value = this.value;
+		},
 
 		/** value of the reflected element */
 		properties : {
@@ -171,10 +187,14 @@
 			slugCheckUrl : { type : String },
 			/** id of source element to reflect. if not provided will try to match by name */
 			source : { type : String },
+			/** don't listen to changes on the source field - useful when the slug is already set and we only want to listen to changes on the slug field itself */
+			disableSourceListener : { type : Boolean, value : false },
 			/** value field to reflect on source element */
 			valueAttr : { type : String, value : "value" },
 			/** current slug value */
-			value : { type : String, value : "", observer : "checkUrlAvailability" },
+			value : { type : String, value : "", observer : "checkUrlAvailability", notify : true },
+			/** current slug value */
+			originalValue : { type : String, value : "", observer : "_setValueToOriginal" },
 			/** character to replace whitespace with */
 			whitespaceChar : { type : String, value : "-" },
 			/** if true will not condense multiple whitespaces into one */
