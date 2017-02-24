@@ -2,6 +2,10 @@
 	Polymer({
 		is : "ir-slug",
 		
+		behaviors: [
+			Polymer.IronFormElementBehavior
+		],
+
 		ready : function() {
 			this.originalValue = this.getAttribute('value');
 		},
