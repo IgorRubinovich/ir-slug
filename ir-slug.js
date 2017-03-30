@@ -10,19 +10,27 @@
 			this.originalValue = this.getAttribute('value');
 		},
 		
-		observers : ["valueChanged(value)"],
+		observers : ["valueChanged(value)", "updateConfig(isAttached,sourceElement,originalValue)"],
 		
 		valueChanged : function() {
 			this.fire('change', this.value);
 		},
 		
 		attached : function() {
-			var el, els, m, mk, mv, i;
-			this.isAttached = true;
-
+			this.set("isAttached", true);
 			this.transliterator = translitEngine(transliterationTable);
+			this.nativeInputElement = document.createElement('input');
+			Polymer.dom(this).appendChild(this.nativeInputElement);
+			
+			this._listeners = [];
 
-			p = Polymer.dom(Polymer.dom(Polymer.dom(this).parentNode).getOwnerRoot()); // look only within the scope of the shadow dom document
+			this.updateConfig();
+		},
+		
+		updateConfig : function() {
+			var el, els, m, mk, mv, i, p, addListener, ol;
+			
+			p = Polymer.dom(Polymer.dom(Polymer.dom(this).parentNode).getOwnerRoot()); // look only within the scope of the shadow dom document in which this element is
 			
 			if(this.source)
 				el = p.querySelector(this.source);
@@ -38,13 +46,29 @@
 			}
 
 			this.sourceElement = el;
-			this.nativeInputElement = document.createElement('input');
 			
-			Polymer.dom(this).appendChild(this.nativeInputElement);
+			this.set("value", this.nativeInputElement.value = this.value);
 
-			this.nativeInputElement.value = this.value;
-			this.nativeInputElement.addEventListener("change", this.slugChanged.bind(this));
-			this.nativeInputElement.addEventListener("keyup", this.slugChanged.bind(this));
+			while(ol = this._listeners.pop())
+				ol.target.removeEventListener(ol.type, ol.handler, true);
+			
+			addListener = function(target, type, handler) { 
+				var boundHandler = handler.bind(this);
+				target.addEventListener(type, boundHandler, true);
+				
+				this._listeners.push({ target : target, type : type, handler : boundHandler }); 
+			}.bind(this);
+			
+			
+			addListener(this.nativeInputElement, "change", this.slugChanged);
+			addListener(this.nativeInputElement, "keyup", this.slugChanged);
+			
+			// rememberListener(this.nativeInputElement.addEventListener("change", this.slugChanged.bind(this)));
+			// rememberListener(this.nativeInputElement.addEventListener("keyup", this.slugChanged.bind(this)));
+			
+			if(this.originalValue)
+				return;
+			
 			this.nativeInputElement.setAttribute('name', this.name || this.sourceElement.name);
 			
 			
@@ -55,7 +79,8 @@
 				return;
 
 			this.nativeInputElement.value = this.get(this.valueAttr, this.sourceElement);
-			this.sourceElement.addEventListener(this.onEvent, function(e) {
+			
+			addListener(this.sourceElement, this.onEvent, function(e) {
 				if(this.disableSourceListener)
 					return;
 
@@ -67,7 +92,9 @@
 						.toLowerCase(); // an option to disable this could make sense
 
 				this.slugChanged();
-			}.bind(this));
+			});
+			
+			
 		},
 		
 		detached : function() {
